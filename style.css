@@ -1,0 +1,28 @@
+button {
+    box-sizing: border-box;    /* パディングとボーダーを幅に含める */
+    display: inline-block;
+    max-width: 100%;           /* 親要素／画面幅を超えない */
+    width: auto;               /* 内容に合わせつつ上限を守る */
+    padding: 0.6rem 1rem;
+    font-size: 2rem;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 4px;
+    overflow: hidden;          /* はみ出しを隠す */
+    white-space: nowrap;
+    text-overflow: ellipsis;   /* 長いテキストは省略表示 */
+    font-family: "Courier Prime", monospace;
+}
+
+/* 必要なら親要素に余白を取りつつ幅を制限 */
+.container {
+    padding: 0 1rem;
+}
+
+/* 小さい画面向けにフォントとパディングを縮小 */
+@media (max-width: 480px) {
+    button {
+        font-size: 3rem;
+        padding: 0.4rem 0.8rem;
+    }
+}

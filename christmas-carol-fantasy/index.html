@@ -5,36 +5,41 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/style.css">
     <title>Brass Player</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
 <a href="/index.html">ホームに戻る</a>
 <div id="player"></div>
-<br>
-<button onclick="seekTo(14)">開始</button>
-<button onclick="seekTo(40)">A</button>
-<button onclick="seekTo(80)">B</button>
-<button onclick="seekTo(102)">C</button>
-<button onclick="seekTo(114)">D</button>
-<button onclick="seekTo(123)">E</button>
-<button onclick="seekTo(136)">F</button>
-<button onclick="seekTo(156)">G</button>
-<button onclick="seekTo(171)">H</button>
-<button onclick="seekTo(199)">I</button>
-<button onclick="seekTo(223)">J</button>
-<button onclick="seekTo(231)">K</button>
-<button onclick="seekTo(243)">L</button>
-<button onclick="seekTo(259)">M</button>
-<button onclick="seekTo(275)">N</button>
-<button onclick="seekTo(292)">O</button>
-<button onclick="seekTo(310)">P</button>
-<button onclick="seekTo(327)">Q</button>
-<button onclick="seekTo(348)">R</button>
-<button onclick="seekTo(380)">S</button>
-<button onclick="seekTo(410)">T</button>
-<button onclick="seekTo(440)">U</button>
-<button onclick="seekTo(463)">V</button>
-<button onclick="seekTo(498)">W</button>
+<div class="container">
+    <button onclick="seekTo(14)">Start</button>
+    <button onclick="seekTo(40)">A</button>
+    <button onclick="seekTo(80)">B</button>
+    <button onclick="seekTo(102)">C</button>
+    <button onclick="seekTo(114)">D</button>
+    <button onclick="seekTo(123)">E</button>
+    <button onclick="seekTo(136)">F</button>
+    <button onclick="seekTo(156)">G</button>
+    <button onclick="seekTo(171)">H</button>
+    <button onclick="seekTo(199)">I</button>
+    <button onclick="seekTo(223)">J</button>
+    <button onclick="seekTo(231)">K</button>
+    <button onclick="seekTo(243)">L</button>
+    <button onclick="seekTo(259)">M</button>
+    <button onclick="seekTo(275)">N</button>
+    <button onclick="seekTo(292)">O</button>
+    <button onclick="seekTo(310)">P</button>
+    <button onclick="seekTo(327)">Q</button>
+    <button onclick="seekTo(348)">R</button>
+    <button onclick="seekTo(380)">S</button>
+    <button onclick="seekTo(410)">T</button>
+    <button onclick="seekTo(440)">U</button>
+    <button onclick="seekTo(463)">V</button>
+    <button onclick="seekTo(498)">W</button>
+</div>
 
 <script>
     var player;
