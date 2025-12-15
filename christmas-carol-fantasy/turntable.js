@@ -1,11 +1,14 @@
 const turntable = document.getElementById('turntable');
 const seekDisplay = document.getElementById('seekDisplay');
 
+const AUTO_ROTATE_SPEED_PPS = 60; // 1秒間に60度回転する
+
 let isDragging = false;
 let startAngle = 0;   // ドラッグ開始時のマウス角度
 let currentRotation = 0; // 現在の円の回転角度
 let initialRotation = 0; // ドラッグ開始時の円の角度
 let autoRotateSpeed = 1; // 自動回転速度（度/フレーム）
+let lastTime = performance.now() // 前回の時間を記録
 let totalSeekDelta = 0; // ドラッグ中の合計秒数変化量
 let dragStartTime = 0; // ドラッグ開始時の動画の秒数
 
@@ -159,16 +162,27 @@ window.addEventListener('mouseup', () => {
 });
 
 // 自動回転のアニメーションループ
-function animate() {
-    // ドラッグしていない、かつ動画が再生中の時だけ自動回転させる
-    // YT.PlayerStat e.PLAYING は 1 でやんす
+function animate(currentTime) {
+// 初回呼び出し時は currentTime が undefined の場合があるので補正
+    if (!currentTime) currentTime = performance.now();
+
+    // 前回のフレームからの経過時間（ミリ秒）を計算
+    const deltaTime = currentTime - lastTime;
+
+    // 次回のために「現在」を「前回」として保存
+    lastTime = currentTime;
+
+    // ドラッグしていない、かつ動画が再生中の時だけ自動回転
     if (!isDragging && isPlayerReady && player.getPlayerState() === 1) {
-        // 動画の進行に合わせて回す演出
-        // ここでは単純に一定速度で回すでやんすが、本当は動画の長さに同期させるとプロっぽい
-        currentRotation += 1;
+
+        // ★ここが修正のキモでやんす！★
+        // (経過ミリ秒 / 1000) で「経過秒数」にし、それに「1秒あたりの速度」を掛ける
+        // これでどんなHzのモニタでも同じ速度になるでやんす！
+        const rotationAmount = AUTO_ROTATE_SPEED_PPS * (deltaTime / 1000);
+
+        currentRotation += rotationAmount;
         turntable.style.transform = `rotate(${currentRotation}deg)`;
 
-        // initialRotationも同期しておかないと、次に触った時にガクッとなる
         initialRotation = currentRotation;
     }
 
