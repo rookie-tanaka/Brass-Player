@@ -1,12 +1,15 @@
 const turntable = document.getElementById('turntable');
+const seekDisplay = document.getElementById('seekDisplay');
 
 let isDragging = false;
 let startAngle = 0;   // ドラッグ開始時のマウス角度
 let currentRotation = 0; // 現在の円の回転角度
 let initialRotation = 0; // ドラッグ開始時の円の角度
 let autoRotateSpeed = 1; // 自動回転速度（度/フレーム）
-// YouTube Iframe API関連のコード
+let totalSeekDelta = 0; // ドラッグ中の合計秒数変化量
+let dragStartTime = 0; // ドラッグ開始時の動画の秒数
 
+// YouTube Iframe API関連のコード
 let player; // YouTubeプレーヤーのオブジェクトを入れる箱
 let isPlayerReady = false;
 
@@ -63,7 +66,6 @@ function getAngle(x, y, center) {
 // マウスダウン（ドラッグ開始）
 turntable.addEventListener('mousedown', (e) => {
     isDragging = true;
-    player.pauseVideo();
     const center = getCenter(turntable);
 
     // 現在のマウスの角度を保存
@@ -72,8 +74,16 @@ turntable.addEventListener('mousedown', (e) => {
     // 現在の円の回転角度を保存（これがないと変な動きになる！）
     initialRotation = currentRotation;
 
+    totalSeekDelta = 0; // 合計変化量をリセット
+    seekDisplay.innerText = "0.0s"; // 表示をリセット
+    turntable.classList.add('dragging'); // CSSで表示させるクラスを付与
     turntable.style.cursor = 'grabbing';
 
+    // ★重要！ドラッグ開始時点の動画時間を「基準」としてロックするでやんす
+    if (isPlayerReady) {
+        dragStartTime = player.getCurrentTime();
+        player.pauseVideo(); // ★ドラッグ中は止めたほうが計算もスムーズでやんす
+    }
 });
 
 // マウスムーブ（回転中）
@@ -85,15 +95,6 @@ window.addEventListener('mousemove', (e) => {
 
     // 回転量の計算（現在のマウス角度 - 開始時のマウス角度）
     let angleDifference = mouseAngle - startAngle;
-
-    /*
-    // 新しい回転角度 = 開始時の円の角度 + 差分
-    // ラジアンを度数法(deg)に変換するのを忘れないように！ (rad * 180 / Math.PI)
-    let newRotation = initialRotation + (angleDifference * (180 / Math.PI));
-
-    currentRotation = newRotation;
-    turntable.style.transform = `rotate(${currentRotation}deg)`;
-    */
 
     // 境界値またぎ（-PIからPIへの急激な変化）の補正が必要でやんす！
     // これをやらないと、真横（9時方向）を跨いだ瞬間に動画が吹っ飛ぶでやんすよ！
@@ -107,15 +108,36 @@ window.addEventListener('mousemove', (e) => {
     turntable.style.transform = `rotate(${newRotation}deg)`;
     currentRotation = newRotation;
 
+    // シーク時間の計算
+    let frameSeekSeconds = rotationDiffDeg * SEEK_SENSITIVITY;
+
+    // 合計変化量の更新
+    totalSeekDelta += frameSeekSeconds;
+
     // ★ここがYouTube連携の肝でやんす！
     if (isPlayerReady) {
-        // 現在の動画時間 + (回転した角度 * 感度)
-        // 時計回り(プラス)なら進む、反時計回り(マイナス)なら戻る
-        let seekTime = player.getCurrentTime() + (rotationDiffDeg * SEEK_SENSITIVITY);
+        // 「固定した基準時間 + 手の動きの合計」でターゲットを決める
+        let targetTime = dragStartTime + totalSeekDelta;
+
+        // 動画の範囲外に行かないようにガードする優しさが必要でやんす
+        let duration = player.getDuration();
+        if (targetTime < 0) targetTime = 0;
+        if (targetTime > duration) targetTime = duration;
 
         // seekTo(秒数, allowSeekAhead)
         // allowSeekAhead: trueにするとバッファリング中でもシークしようとする
-        player.seekTo(seekTime, true);
+        player.seekTo(targetTime, true);
+
+        // ★合計変化量に足し込む
+        totalSeekDelta += frameSeekSeconds;
+
+        // ★画面に表示（プラス記号をつけると親切でやんす）
+        // toFixed(1) で小数点第1位までにするのが見やすさのコツ
+        let sign = totalSeekDelta > 0 ? "+" : "";
+        seekDisplay.innerText = `${sign}${totalSeekDelta.toFixed(1)}s`;
+
+        // 色を変える演出もアリ（戻る時は赤、進む時は青とか）
+        seekDisplay.style.color = totalSeekDelta < 0 ? '#ff4757' :'#2ed573';
     }
 
     // 次の計算のために現在の角度と回転量を更新
@@ -127,8 +149,13 @@ window.addEventListener('mousemove', (e) => {
 // マウスアップ（ドラッグ終了）
 window.addEventListener('mouseup', () => {
     isDragging = false;
-    player.playVideo();
     turntable.style.cursor = 'grab';
+    turntable.classList.remove('dragging');
+
+    // 手を離したら再生再開
+    if (isPlayerReady) {
+        player.playVideo();
+    }
 });
 
 // 自動回転のアニメーションループ

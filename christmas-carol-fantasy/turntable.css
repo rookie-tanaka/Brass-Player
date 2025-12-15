@@ -7,7 +7,22 @@ body {
     background-color: #f0f0f0;
     font-family: Arial, sans-serif;
 }
+.seek-display {
+    position: absolute;
+    top: 50%; /* 真ん中に */
+    left: 50%;
+    transform: translate(-50%, -50%); /* ど真ん中補正 */
 
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.8); /* 読みやすくする影 */
+    pointer-events: none; /* マウスの邪魔をしないように！ */
+
+    opacity: 0; /* 普段は隠す */
+    transition: opacity 0.2s; /* ふわっと出す */
+    z-index: 10;
+}
 .turntable {
     width: 300px;
     height: 300px;
@@ -21,6 +36,15 @@ body {
 
 .turntable:active {
     cursor: grabbing;
+}
+/* JSでクラスを付け外しして表示制御するでやんす */
+.turntable.dragging .seek-display {
+    opacity: 1;
+}
+
+/* ドラッグ中は邪魔な文字を消すのもアリでやんす */
+.turntable.dragging .label {
+    opacity: 0;
 }
 
 /* 回転がわかるように目印をつけるでやんす */
