@@ -66,13 +66,13 @@ function getAngle(x, y, center) {
     return Math.atan2(deltaY, deltaX);
 }
 
-// マウスダウン（ドラッグ開始）
-turntable.addEventListener('mousedown', (e) => {
+// ドラッグ開始
+function handleStart(clientX, clientY) {
     isDragging = true;
     const center = getCenter(turntable);
 
-    // 現在のマウスの角度を保存
-    startAngle = getAngle(e.clientX, e.clientY, center);
+    // 現在の角度を保存
+    startAngle = getAngle(clientX, clientY, center);
 
     // 現在の円の回転角度を保存（これがないと変な動きになる！）
     initialRotation = currentRotation;
@@ -87,16 +87,16 @@ turntable.addEventListener('mousedown', (e) => {
         dragStartTime = player.getCurrentTime();
         player.pauseVideo(); // ★ドラッグ中は止めたほうが計算もスムーズでやんす
     }
-});
+}
 
-// マウスムーブ（回転中）
-window.addEventListener('mousemove', (e) => {
+// 回転中
+function handleMove(clientX, clientY) {
     if (!isDragging) return;
 
     const center = getCenter(turntable);
-    const mouseAngle = getAngle(e.clientX, e.clientY, center);
+    const mouseAngle = getAngle(clientX, clientY, center);
 
-    // 回転量の計算（現在のマウス角度 - 開始時のマウス角度）
+    // 回転量の計算（現在の角度 - 開始時の角度）
     let angleDifference = mouseAngle - startAngle;
 
     // 境界値またぎ（-PIからPIへの急激な変化）の補正が必要でやんす！
@@ -147,10 +147,10 @@ window.addEventListener('mousemove', (e) => {
     // ※ここを更新しないと「差分」ではなく「絶対位置」になってしまうので注意！
     startAngle = mouseAngle;
     initialRotation = newRotation;
-});
+}
 
-// マウスアップ（ドラッグ終了）
-window.addEventListener('mouseup', () => {
+// ドラッグ終了
+function handleEnd() {
     isDragging = false;
     turntable.style.cursor = 'grab';
     turntable.classList.remove('dragging');
@@ -159,7 +159,7 @@ window.addEventListener('mouseup', () => {
     if (isPlayerReady) {
         player.playVideo();
     }
-});
+}
 
 // 自動回転のアニメーションループ
 function animate(currentTime) {
@@ -190,3 +190,31 @@ function animate(currentTime) {
 }
 //ループ
 animate();
+
+// --- イベントリスナー登録（ここがスマホ対応のキモ！） ---
+
+// マウス用
+turntable.addEventListener('mousedown', (e) => {
+    handleStart(e.clientX, e.clientY);
+});
+window.addEventListener('mousemove', (e) => {
+    handleMove(e.clientX, e.clientY);
+});
+window.addEventListener('mouseup', handleEnd);
+
+
+// スマホ（タッチ）用
+turntable.addEventListener('touchstart', (e) => {
+    // スクロール防止（これをしないと画面ごと動いちゃうでやんす！）
+    e.preventDefault();
+    // タッチは複数指の可能性があるから、1本目(touches[0])を使う
+    handleStart(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false }); // preventDefaultを使うための呪文
+
+window.addEventListener('touchmove', (e) => {
+    // ここでもpreventDefaultしないと、スクラッチ中に画面がスクロールしちゃうでやんす
+    e.preventDefault();
+    handleMove(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
+
+window.addEventListener('touchend', handleEnd);
