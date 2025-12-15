@@ -26,10 +26,6 @@
     opacity: 1;
 }
 
-/* ドラッグ中は邪魔な文字を消すのもアリでやんす */
-.turntable.dragging .label {
-    opacity: 0;
-}
 
 .label {
     position: absolute;
