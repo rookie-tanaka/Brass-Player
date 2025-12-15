@@ -4,8 +4,27 @@ let isDragging = false;
 let startAngle = 0;   // ドラッグ開始時のマウス角度
 let currentRotation = 0; // 現在の円の回転角度
 let initialRotation = 0; // ドラッグ開始時の円の角度
+let autoRotateSpeed = 1; // 自動回転速度（度/フレーム）
 
-// 円の中心座標を取得する関数でやんす
+// 自動回転のアニメーションループ
+function animate() {
+    if (!isDragging) {
+        currentRotation += autoRotateSpeed;
+
+        // 360度
+        if (currentRotation >= 360) {
+            currentRotation -= 360;
+        }
+
+        turntable.style.transform = `rotate(${currentRotation}deg)`;
+    }
+
+    requestAnimationFrame(animate);
+}
+//ループ
+animate();
+
+// 円の中心座標を取得する関数
 function getCenter(element) {
     const rect = element.getBoundingClientRect();
     return {
@@ -14,11 +33,11 @@ function getCenter(element) {
     };
 }
 
-// マウス座標から角度(ラジアン)を計算する関数でやんす
+// マウス座標から角度(ラジアン)を計算する関数
 function getAngle(x, y, center) {
     const deltaX = x - center.x;
     const deltaY = y - center.y;
-    // Math.atan2(y, x) は -PI から PI の値を返すでやんす
+    // Math.atan2(y, x) は -PI から PI の値を返す
     return Math.atan2(deltaY, deltaX);
 }
 
@@ -30,7 +49,7 @@ turntable.addEventListener('mousedown', (e) => {
     // 現在のマウスの角度を保存
     startAngle = getAngle(e.clientX, e.clientY, center);
 
-    // 現在の円の回転角度を保存（これがないと変な動きになるでやんすよ！）
+    // 現在の円の回転角度を保存（これがないと変な動きになる！）
     initialRotation = currentRotation;
 
     turntable.style.cursor = 'grabbing';
