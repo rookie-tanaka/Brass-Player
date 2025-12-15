@@ -1,12 +1,52 @@
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+.turntable-wrapper {
+    position: relative; /* 子要素の基準点になる */
+    width: 300px;  /* ターンテーブルと同じサイズにする */
+    height: 300px; /* 同上 */
+    /* 画面幅対応するならここも aspect-ratio: 1/1 とか width: 80vw とかにする */
 }
+.turntable {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+
+    /* 高さは aspect-ratio に任せるので auto にするか削除する */
+    background: url('../img/turntable-bg.webp') no-repeat center/contain;
+    border-radius: 50%; /* これで丸くするでやんす */
+    position: relative;
+    cursor: grab; /* 掴める感じを出すでやんす */
+    user-select: none; /* テキスト選択禁止！これ重要でやんす */
+}
+
+.turntable:active {
+    cursor: grabbing;
+}
+
+/* 「turntableにdraggingがついている時、その後ろにあるseek-display」を指定 */
+.turntable.dragging + .seek-display {
+    opacity: 1;
+}
+
+/* ドラッグ中は邪魔な文字を消すのもアリでやんす */
+.turntable.dragging .label {
+    opacity: 0;
+}
+
+.label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    pointer-events: none; /* マウスの邪魔をしないように！ */
+}
+.label img{
+    display: block;       /* 隙間をなくす */
+    width: 120%; /* 背景サイズに合わせた比率で表示 */
+    height: auto;
+    pointer-events: none; /* 既存の挙動を保持 */
+    user-select: none;
+    transform: translate(-50%, -50%);
+}
+
 .seek-display {
     position: absolute;
     top: 50%; /* 真ん中に */
@@ -18,56 +58,9 @@ body {
     color: #fff;
     text-shadow: 0 2px 5px rgba(0,0,0,0.8); /* 読みやすくする影 */
     pointer-events: none; /* マウスの邪魔をしないように！ */
+    font-family: "Courier Prime", monospace;
 
     opacity: 0; /* 普段は隠す */
-    transition: opacity 0.2s; /* ふわっと出す */
+    transition: opacity 0.2s ease; /* ふわっと出す */
     z-index: 10;
-}
-.turntable {
-    width: 80vw;
-    max-width: 300px;
-    aspect-ratio: 1 / 1;
-
-    /* 高さは aspect-ratio に任せるので auto にするか削除する */
-    height: auto;
-    background: radial-gradient(circle, #333 0%, #000 100%);
-    border-radius: 50%; /* これで丸くするでやんす */
-    position: relative;
-    cursor: grab; /* 掴める感じを出すでやんす */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    user-select: none; /* テキスト選択禁止！これ重要でやんす */
-}
-
-.turntable:active {
-    cursor: grabbing;
-}
-/* JSでクラスを付け外しして表示制御するでやんす */
-.turntable.dragging .seek-display {
-    opacity: 1;
-}
-
-/* ドラッグ中は邪魔な文字を消すのもアリでやんす */
-.turntable.dragging .label {
-    opacity: 0;
-}
-
-/* 回転がわかるように目印をつけるでやんす */
-.marker {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 20px;
-    background-color: #ff4757;
-    border-radius: 50%;
-}
-
-.label {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #666;
-    pointer-events: none;
 }

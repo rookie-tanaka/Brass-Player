@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Turntable UI</title>
     <link rel="stylesheet" href="turntable.css">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="player"></div>
 
-<div id="turntable" class="turntable">
-    <div class="label">DRAG ME</div>
-    <div class="marker"></div>
+<div class="turntable-wrapper">
+
+    <div id="turntable" class="turntable">
+        <div class="label"><img src="../img/turntable-logo.webp"></div>
+    </div>
+
     <div id="seekDisplay" class="seek-display">+0.0s</div>
+
 </div>
 <script src="turntable.js"></script>
 </body>
