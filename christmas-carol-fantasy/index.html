@@ -12,34 +12,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
-<a href="../index.html">ホームに戻る</a>
-<div id="player"></div>
-<div class="container">
-    <button onclick="seekTo(14)">Start</button>
-    <button onclick="seekTo(40)">A</button>
-    <button onclick="seekTo(80)">B</button>
-    <button onclick="seekTo(102)">C</button>
-    <button onclick="seekTo(114)">D</button>
-    <button onclick="seekTo(123)">E</button>
-    <button onclick="seekTo(136)">F</button>
-    <button onclick="seekTo(156)">G</button>
-    <button onclick="seekTo(171)">H</button>
-    <button onclick="seekTo(199)">I</button>
-    <button onclick="seekTo(223)">J</button>
-    <button onclick="seekTo(231)">K</button>
-    <button onclick="seekTo(243)">L</button>
-    <button onclick="seekTo(259)">M</button>
-    <button onclick="seekTo(275)">N</button>
-    <button onclick="seekTo(292)">O</button>
-    <button onclick="seekTo(310)">P</button>
-    <button onclick="seekTo(327)">Q</button>
-    <button onclick="seekTo(348)">R</button>
-    <button onclick="seekTo(380)">S</button>
-    <button onclick="seekTo(410)">T</button>
-    <button onclick="seekTo(440)">U</button>
-    <button onclick="seekTo(463)">V</button>
-    <button onclick="seekTo(498)">W</button>
-</div>
+<section class="main-section">
+    <a href="../index.html">ホームに戻る</a>
+    <div id="player"></div>
+    <div class="container">
+        <button onclick="seekTo(14)">Start</button>
+        <button onclick="seekTo(40)">A</button>
+        <button onclick="seekTo(80)">B</button>
+        <button onclick="seekTo(102)">C</button>
+        <button onclick="seekTo(114)">D</button>
+        <button onclick="seekTo(123)">E</button>
+        <button onclick="seekTo(136)">F</button>
+        <button onclick="seekTo(156)">G</button>
+        <button onclick="seekTo(171)">H</button>
+        <button onclick="seekTo(199)">I</button>
+        <button onclick="seekTo(223)">J</button>
+        <button onclick="seekTo(231)">K</button>
+        <button onclick="seekTo(243)">L</button>
+        <button onclick="seekTo(259)">M</button>
+        <button onclick="seekTo(275)">N</button>
+        <button onclick="seekTo(292)">O</button>
+        <button onclick="seekTo(310)">P</button>
+        <button onclick="seekTo(327)">Q</button>
+        <button onclick="seekTo(348)">R</button>
+        <button onclick="seekTo(380)">S</button>
+        <button onclick="seekTo(410)">T</button>
+        <button onclick="seekTo(440)">U</button>
+        <button onclick="seekTo(463)">V</button>
+        <button onclick="seekTo(498)">W</button>
+    </div>
+</section>
+<section class="primary-section">
+    <div class="container">
+        <button onclick="skipSeconds(-5)">-5s</button>
+        <button onclick="skipSeconds(5)">+5s</button>
+    </div>
+</section>
 
 <script>
     var player;
@@ -57,6 +65,12 @@
     function seekTo(seconds) {
         player.seekTo(seconds, true);
     }
+    function skipSeconds(seconds) {
+        const currentTime = player.getCurrentTime();
+        player.seekTo(currentTime + seconds, true);
+    }
+    // 1秒
+
     // APIスクリプトを非同期読み込み
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";

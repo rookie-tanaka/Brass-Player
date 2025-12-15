@@ -1,3 +1,40 @@
+:root {
+    --primary-h: 96px;
+}
+
+html, body {
+    margin: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: var(--primary-h);
+    background-color: black;
+}
+
+.main-section {
+    height: calc(100dvh - var(--primary-h));
+    background-color: white;
+    overflow: auto;
+    box-sizing: border-box;
+    border-radius: 0 0 16px 16px;
+}
+.primary-section {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--primary-h);
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;      /* 垂直中央 */
+    justify-content: center;  /* 水平中央 */
+    gap: 0.5rem;              /* 複数要素の間隔（任意） */
+    text-align: center;       /* テキスト要素を中央寄せにする場合 */
+    z-index: 1000;
+}
+
 button {
     box-sizing: border-box;    /* パディングとボーダーを幅に含める */
     display: inline-block;
