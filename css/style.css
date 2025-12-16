@@ -1,60 +1,70 @@
 :root {
     --primary-h: 132px;
+    --bottom-spacing: 8px;
 }
 
 html, body {
     margin: 0;
 }
+
 body {
-    display: flex;
-    flex-direction: column;
+    /* bodyにpadding-bottomを設定して、スクロールの終端でフッターにコンテンツが隠れないようにする */
+    padding-bottom: var(--primary-h);
 }
 
 .main-section {
-
     background-color: white;
-    overflow: auto;
     box-sizing: border-box;
-    border-radius: 0 0 16px 16px;
+    
+    /* ターンテーブルを中央に配置 */
+    display: flex;
+    flex-direction: column; /* コンテンツが複数ある場合を想定 */
+    justify-content: center;
+    align-items: center;
+
+    /* 画面いっぱいに広がるように最低限の高さを設定 */
+    /* これでコンテンツが少なくてもターンテーブルが中央に来る */
+    min-height: calc(100vh - var(--primary-h));
+    
+    /* paddingで上下左右の余白を確保 */
+    padding: var(--bottom-spacing);
 }
+
 .primary-section {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     height: var(--primary-h);
-    box-sizing: border-box;
 
     display: flex;
-    align-items: center;      /* 垂直中央 */
-    justify-content: center;  /* 水平中央 */
-    gap: 0.5rem;              /* 複数要素の間隔（任意） */
-    text-align: center;       /* テキスト要素を中央寄せにする場合 */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-align: center;
     z-index: 1000;
 }
 
 button {
-    box-sizing: border-box;    /* パディングとボーダーを幅に含める */
+    box-sizing: border-box;
     display: inline-block;
-    max-width: 100%;           /* 親要素／画面幅を超えない */
-    width: auto;               /* 内容に合わせつつ上限を守る */
+    max-width: 100%;
+    width: auto;
     padding: 0.6rem 1rem;
     font-size: 2rem;
     background-color: white;
     border: 2px solid black;
     border-radius: 4px;
-    overflow: hidden;          /* はみ出しを隠す */
+    overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis;   /* 長いテキストは省略表示 */
+    text-overflow: ellipsis;
     font-family: "Courier Prime", monospace;
 }
 
-/* 必要なら親要素に余白を取りつつ幅を制限 */
 .container {
     padding: 0 1rem;
 }
 
-/* 小さい画面向けにフォントとパディングを縮小 */
 @media (max-width: 480px) {
     button {
         font-size: 3rem;
