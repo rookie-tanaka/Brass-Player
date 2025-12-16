@@ -24,14 +24,16 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 // 2. APIの準備ができたら呼ばれる関数（名前は固定！）
 function onYouTubeIframeAPIReady() {
+    // HTMLの要素の取得
+    const playerElement = document.getElementById('player');
+    // data-video-id属性の中身を取り出す
+    const videoId = playerElement.getAttribute('data-video-id');
+
     player = new YT.Player('player', {
-        height: '360',
-        width: '640',
-        videoId: 'tI-5uv4wryI', // ここに好きな動画IDを入れるでやんす
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-        }
+        height: '180',
+        width: '320',
+        videoId: videoId, // 動画IDを指定
+        events: { 'onReady': onPlayerReady }
     });
 }
 

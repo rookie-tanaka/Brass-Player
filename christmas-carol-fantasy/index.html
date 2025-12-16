@@ -14,7 +14,7 @@
 <body>
 <section class="main-section">
     <a href="../index.html">ホームに戻る</a>
-    <div id="player"></div>
+    <div id="player" data-video-id="F11vMU0Nsjo"></div>
     <div class="container">
         <button onclick="seekTo(14)">Start</button>
         <button onclick="seekTo(40)">A</button>
@@ -52,10 +52,15 @@
 <script>
     var player;
     function onYouTubeIframeAPIReady() {
+        // HTMLの要素の取得
+        const playerElement = document.getElementById('player');
+        // data-video-id属性の中身を取り出す
+        const videoId = playerElement.getAttribute('data-video-id');
+
         player = new YT.Player('player', {
             height: '180',
             width: '320',
-            videoId: 'F11vMU0Nsjo', // 動画IDを指定
+            videoId: videoId, // 動画IDを指定
             events: { 'onReady': onPlayerReady }
         });
     }
