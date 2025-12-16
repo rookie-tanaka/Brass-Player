@@ -2,6 +2,7 @@ const turntable = document.getElementById('turntable');
 const seekDisplay = document.getElementById('seekDisplay');
 
 const AUTO_ROTATE_SPEED_PPS = 60; // 1秒間に60度回転する
+const LONG_PRESS_MS = 500;
 
 let isDragging = false;
 let startAngle = 0;   // ドラッグ開始時のマウス角度
@@ -15,6 +16,7 @@ let dragStartX = 0; // ドラッグ開始時のマウスX座標
 let dragStartY = 0; // ドラッグ開始時のマウスY座標
 let hasMoved = false; // ドラッグ中に動いたかどうかのフラグ
 let initialPlayerState = -1;
+let pressStartTime = 0;
 
 // YouTube Iframe API関連のコード
 let player; // YouTubeプレーヤーのオブジェクトを入れる箱
@@ -84,6 +86,8 @@ function getAngle(x, y, center) {
 // ドラッグ開始
 function handleStart(clientX, clientY) {
     isDragging = true;
+
+    pressStartTime = performance.now();
 
     // タップ判定用に開始座標を保存
     dragStartX = clientX;
@@ -198,9 +202,13 @@ function handleEnd() {
     turntable.style.cursor = 'grab';
     turntable.classList.remove('dragging');
 
+    const pressDuration = performance.now() - pressStartTime;
+
+    const isLongPress = pressDuration > LONG_PRESS_MS;
+
     // 手を離したら再生再開
     if (isPlayerReady) {
-        if(hasMoved) {
+        if(hasMoved || isLongPress) {
             player.playVideo();
         } else {
             if(initialPlayerState === 1) {
