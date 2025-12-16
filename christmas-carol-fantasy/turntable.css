@@ -1,13 +1,13 @@
 .turntable-wrapper {
     position: fixed; /* 画面に固定 */
-    bottom: var(--bottom-spacing, 8px); /* 下からの余白 (デフォルト8px) */
+    bottom: 8px; /* 下からの余白 (デフォルト8px) */
     left: 50%; /* 水平中央揃えのため */
     transform: translateX(-50%); /* 水平中央揃えの補正 */
 
     aspect-ratio: 1 / 1; /* 正方形を維持 */
     
     /* ビューポートの幅と高さの小さい方を基準にサイズを決める */
-    width: clamp(150px, 40vmin, 400px); /* 最小150px, 基本40vmin, 最大400px */
+    width: clamp(150px, 30vmin, 400px); /* 最小150px, 基本40vmin, 最大400px */
     z-index: 1001; /* primary-sectionより手前に表示 */
 }
 .turntable {
