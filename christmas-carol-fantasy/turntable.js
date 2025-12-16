@@ -14,6 +14,7 @@ let dragStartTime = 0; // ドラッグ開始時の動画の秒数
 let dragStartX = 0; // ドラッグ開始時のマウスX座標
 let dragStartY = 0; // ドラッグ開始時のマウスY座標
 let hasMoved = false; // ドラッグ中に動いたかどうかのフラグ
+let initialPlayerState = -1;
 
 // YouTube Iframe API関連のコード
 let player; // YouTubeプレーヤーのオブジェクトを入れる箱
@@ -52,6 +53,7 @@ function onPlayerStateChange(event) {
 
 function seekTo(seconds) {
     player.seekTo(seconds, true);
+    player.playVideo();
 }
 function skipSeconds(seconds) {
     const currentTime = player.getCurrentTime();
@@ -103,7 +105,13 @@ function handleStart(clientX, clientY) {
 
     // ★重要！ドラッグ開始時点の動画時間を「基準」としてロックするでやんす
     if (isPlayerReady) {
+        initialPlayerState = player.getPlayerState();
         dragStartTime = player.getCurrentTime();
+
+        if (initialPlayerState === 1) {
+            player.pauseVideo();
+        }
+
     }
 }
 
@@ -184,6 +192,8 @@ function handleMove(clientX, clientY) {
 
 // ドラッグ終了
 function handleEnd() {
+    if (!isDragging) return;
+
     isDragging = false;
     turntable.style.cursor = 'grab';
     turntable.classList.remove('dragging');
@@ -193,12 +203,9 @@ function handleEnd() {
         if(hasMoved) {
             player.playVideo();
         } else {
-            const state = player.getPlayerState();
+            if(initialPlayerState === 1) {
 
-            if(state == 1) {
-                player.pauseVideo();
-
-                turnable.style.transform = `rotate(${state.angle}deg)`;
+                turntable.style.transform = `rotate(${state.angle}deg)`;
                 setTimeout(() => {
                     turntable.style.transform = `rotate(${state.angle}deg)`;
                 }, 100);
