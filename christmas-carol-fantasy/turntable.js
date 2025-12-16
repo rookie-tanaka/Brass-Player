@@ -11,6 +11,9 @@ let autoRotateSpeed = 1; // 自動回転速度（度/フレーム）
 let lastTime = performance.now() // 前回の時間を記録
 let totalSeekDelta = 0; // ドラッグ中の合計秒数変化量
 let dragStartTime = 0; // ドラッグ開始時の動画の秒数
+let dragStartX = 0; // ドラッグ開始時のマウスX座標
+let dragStartY = 0; // ドラッグ開始時のマウスY座標
+let hasMoved = false; // ドラッグ中に動いたかどうかのフラグ
 
 // YouTube Iframe API関連のコード
 let player; // YouTubeプレーヤーのオブジェクトを入れる箱
@@ -79,6 +82,12 @@ function getAngle(x, y, center) {
 // ドラッグ開始
 function handleStart(clientX, clientY) {
     isDragging = true;
+
+    // タップ判定用に開始座標を保存
+    dragStartX = clientX;
+    dragStartY = clientY;
+    hasMoved = false; // 動いたかどうかのフラグをリセット
+
     const center = getCenter(turntable);
 
     // 現在の角度を保存
@@ -95,13 +104,27 @@ function handleStart(clientX, clientY) {
     // ★重要！ドラッグ開始時点の動画時間を「基準」としてロックするでやんす
     if (isPlayerReady) {
         dragStartTime = player.getCurrentTime();
-        player.pauseVideo(); // ★ドラッグ中は止めたほうが計算もスムーズでやんす
     }
 }
 
 // 回転中
 function handleMove(clientX, clientY) {
     if (!isDragging) return;
+
+    if(!hasMoved) {
+        const moveX = Math.abs(clientX - dragStartX);
+        const moveY = Math.abs(clientY - dragStartY);
+        // 5ピクセル以上動いたら「動いた」と判定
+        if(moveX > 5 || moveY > 5) {
+            hasMoved = true;
+
+            if(isPlayerReady) {
+                player.pauseVideo();
+            }
+        } else {
+            return; // まだ動いていないので処理を中断
+        }
+    }
 
     const center = getCenter(turntable);
     const mouseAngle = getAngle(clientX, clientY, center);
@@ -167,7 +190,23 @@ function handleEnd() {
 
     // 手を離したら再生再開
     if (isPlayerReady) {
-        player.playVideo();
+        if(hasMoved) {
+            player.playVideo();
+        } else {
+            const state = player.getPlayerState();
+
+            if(state == 1) {
+                player.pauseVideo();
+
+                turnable.style.transform = `rotate(${state.angle}deg)`;
+                setTimeout(() => {
+                    turntable.style.transform = `rotate(${state.angle}deg)`;
+                }, 100);
+            } else {
+                player.playVideo();
+            }
+        }
+
     }
 }
 
