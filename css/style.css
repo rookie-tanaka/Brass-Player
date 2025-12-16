@@ -1,5 +1,5 @@
 :root {
-    --primary-h: 96px;
+    --primary-h: 132px;
 }
 
 html, body {
@@ -8,12 +8,10 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    padding-bottom: var(--primary-h);
-    background-color: black;
 }
 
 .main-section {
-    height: calc(100dvh - var(--primary-h));
+
     background-color: white;
     overflow: auto;
     box-sizing: border-box;

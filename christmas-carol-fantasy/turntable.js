@@ -47,6 +47,14 @@ function onPlayerStateChange(event) {
     // 動画の再生/停止に合わせて何かしたいならここに書くでやんす
 }
 
+function seekTo(seconds) {
+    player.seekTo(seconds, true);
+}
+function skipSeconds(seconds) {
+    const currentTime = player.getCurrentTime();
+    player.seekTo(currentTime + seconds, true);
+}
+
 // 感度設定：1度回すと何秒進むか（調整必須！）
 const SEEK_SENSITIVITY = 0.05;
 

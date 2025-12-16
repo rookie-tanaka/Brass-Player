@@ -6,6 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="turntable.css">
     <title>クリスマスキャロルファンタジー</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,44 +44,17 @@
     </div>
 </section>
 <section class="primary-section">
-    <div class="container">
-        <button onclick="skipSeconds(-5)">-5s</button>
-        <button onclick="skipSeconds(5)">+5s</button>
+    <div class="turntable-wrapper">
+
+        <div id="turntable" class="turntable">
+            <div class="label"><img src="../img/turntable-logo.webp"></div>
+        </div>
+
+        <div id="seekDisplay" class="seek-display">+0.0s</div>
+
     </div>
 </section>
 
-<script>
-    var player;
-    function onYouTubeIframeAPIReady() {
-        // HTMLの要素の取得
-        const playerElement = document.getElementById('player');
-        // data-video-id属性の中身を取り出す
-        const videoId = playerElement.getAttribute('data-video-id');
-
-        player = new YT.Player('player', {
-            height: '180',
-            width: '320',
-            videoId: videoId, // 動画IDを指定
-            events: { 'onReady': onPlayerReady }
-        });
-    }
-    function onPlayerReady(event) {
-        // 準備完了時の処理（オプション）
-    }
-    function seekTo(seconds) {
-        player.seekTo(seconds, true);
-    }
-    function skipSeconds(seconds) {
-        const currentTime = player.getCurrentTime();
-        player.seekTo(currentTime + seconds, true);
-    }
-    // 1秒
-
-    // APIスクリプトを非同期読み込み
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-</script>
+<script src="turntable.js"></script>
 </body>
 </html>

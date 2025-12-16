@@ -1,6 +1,8 @@
 .turntable-wrapper {
     position: relative; /* 子要素の基準点になる */
     width: 300px;  /* ターンテーブルと同じサイズにする */
+    max-width: 30vw;
+    aspect-ratio: 1 / 1;
     height: 300px; /* 同上 */
     /* 画面幅対応するならここも aspect-ratio: 1/1 とか width: 80vw とかにする */
 }
