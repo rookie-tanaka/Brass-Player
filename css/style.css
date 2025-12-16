@@ -43,6 +43,12 @@ body {
     gap: 0.5rem;
     text-align: center;
     z-index: 1000;
+    pointer-events: none; /* 下の要素へのクリックを透過させる */
+}
+
+/* .primary-section内の要素はクリック可能にする */
+.primary-section > * {
+    pointer-events: auto;
 }
 
 button {
