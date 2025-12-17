@@ -21,11 +21,11 @@
     gap: 1rem;
 }
 .logo-icon {
-    width: clamp(12px, 30vw, 172px);
+    width: clamp(6px, 30vw, 172px);
 }
 .logo-text {
     font-family: "POPFUN EXTRUDE";
-    font-size: clamp(12px, 22vw, 172px);
+    font-size: clamp(12px, 26vw, 172px);
     background: url(../img/bg.png) repeat-x;
     background-size: 300px 200px;
     animation:
