@@ -1,11 +1,65 @@
 :root {
     --primary-h: 132px;
 }
-
-html, body {
+@font-face {
+    font-family: 'POPFUN EXTRUDE';
+    src: url('/fonts/popfun extrude.otf') format('opentype');
+}
+html body{
     margin: 0;
+    font-family: "M PLUS 1p", sans-serif
+}
+a {
+    font-weight: 900;
+    color: black;
 }
 
+.header {
+    max-width: 500px;
+    width: 80vw;
+}
+.logo-wrapper {
+    margin: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    gap: 1rem;
+}
+.logo-icon {
+    width: clamp(6px, 30vw, 172px);
+}
+.logo-text {
+    font-family: "POPFUN EXTRUDE";
+    font-size: clamp(12px, 26vw, 172px);
+    background: url(../img/bg.png) repeat-x;
+    background-size: 300px 200px;
+    animation:
+            fadeToTransparent 4s ease forwards,
+            slide 20s linear infinite;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: black;
+    margin: 0;
+    letter-spacing: 0.4vw;
+}
+@keyframes fadeToTransparent {
+    to {
+        color: transparent;
+    }
+}
+@keyframes slide {
+    0% { background-position: 0 0; }
+    100% { background-position: 300px 0; }
+}
+
+.home-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .main-section {
     background-color: white;
@@ -29,6 +83,7 @@ button {
     white-space: nowrap;
     text-overflow: ellipsis;
     font-family: "Courier Prime", monospace;
+    color: black;
 }
 
 .container {
