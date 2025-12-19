@@ -3,7 +3,9 @@
 }
 @font-face {
     font-family: 'POPFUN EXTRUDE';
-    src: url('../fonts/popfun extrude.otf') format('opentype');
+    src: url('../fonts/POPFUN Extrude.otf') format('opentype');
+    src: url('../fonts/POPFUN Extrude.woff') format('woff');
+    src: url('../fonts/POPFUN Extrude.woff2') format('woff2');
 }
 html body{
     margin: 0;
