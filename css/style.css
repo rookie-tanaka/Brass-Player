@@ -88,6 +88,9 @@ button {
     text-overflow: ellipsis;
     font-family: "Courier Prime", monospace;
     color: black;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
 .container {
