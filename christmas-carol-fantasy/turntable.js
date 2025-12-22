@@ -18,6 +18,7 @@ let dragStartY = 0; // ドラッグ開始時のマウスY座標
 let hasMoved = false; // ドラッグ中に動いたかどうかのフラグ
 let initialPlayerState = -1;
 let pressStartTime = 0;
+let visualPercentage = 0; // 進行度の視覚的な値
 
 // YouTube Iframe API関連のコード
 let player; // YouTubeプレーヤーのオブジェクトを入れる箱
@@ -256,15 +257,22 @@ function animate(currentTime) {
         const duration = player.getDuration();
         const current = player.getCurrentTime();
 
-        let percentage = 0;
+        let targetPercentage = 0;
         if (duration > 0) {
-            percentage = (current / duration) * 100;
+            targetPercentage = (current / duration) * 100;
         }
+
+        visualPercentage += (targetPercentage - visualPercentage) * 0.1;
+
+        if (Math.abs(targetPercentage - visualPercentage) < 0.01) {
+            visualPercentage = targetPercentage;
+        }
+
 
         // CSS変数を更新して、グラデーションを動かす
         // progressRingがnullじゃないか確認してから実行する優しさが必要でやんす
         if (progressRing) {
-            progressRing.style.setProperty('--progress', `${percentage}%`);
+            progressRing.style.setProperty('--progress', `${visualPercentage.toFixed(2)}%`);
         }
     }
 
