@@ -95,6 +95,9 @@ button {
 
 .container {
     padding: 0 1rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
 @media (max-width: 480px) {

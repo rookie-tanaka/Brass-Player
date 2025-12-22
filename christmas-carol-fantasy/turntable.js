@@ -1,5 +1,6 @@
 const turntable = document.getElementById('turntable');
 const seekDisplay = document.getElementById('seekDisplay');
+const progressRing = document.getElementById('progressRing');
 
 const AUTO_ROTATE_SPEED_PPS = 60; // 1秒間に60度回転する
 const LONG_PRESS_MS = 500;
@@ -248,6 +249,23 @@ function animate(currentTime) {
         turntable.style.transform = `rotate(${currentRotation}deg)`;
 
         initialRotation = currentRotation;
+    }
+
+    if (isPlayerReady) {
+        // 現在の進行度（%）を計算
+        const duration = player.getDuration();
+        const current = player.getCurrentTime();
+
+        let percentage = 0;
+        if (duration > 0) {
+            percentage = (current / duration) * 100;
+        }
+
+        // CSS変数を更新して、グラデーションを動かす
+        // progressRingがnullじゃないか確認してから実行する優しさが必要でやんす
+        if (progressRing) {
+            progressRing.style.setProperty('--progress', `${percentage}%`);
+        }
     }
 
     requestAnimationFrame(animate);

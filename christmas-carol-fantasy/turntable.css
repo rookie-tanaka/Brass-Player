@@ -21,6 +21,7 @@
     cursor: grab;
     user-select: none;
     /* transform-origin はデフォルト(center center)に戻す */
+    z-index: 1;
 }
 
 .turntable:active {
@@ -65,4 +66,24 @@
     opacity: 0; /* 普段は隠す */
     transition: opacity 0.2s ease; /* ふわっと出す */
     z-index: 10;
+}
+
+.progress-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+
+    border-radius: 50%;
+
+    background: conic-gradient(
+        #ff4547 0% var(--progress, 0%),
+        transparent var(--progress, 0%) 100%
+    );
+    z-index: 0;
+    pointer-events: none;
+
 }
