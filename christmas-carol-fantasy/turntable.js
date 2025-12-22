@@ -4,6 +4,7 @@ const progressRing = document.getElementById('progressRing');
 
 const AUTO_ROTATE_SPEED_PPS = 60; // 1秒間に60度回転する
 const LONG_PRESS_MS = 500;
+const STOP_FRICTION = 70; // 摩擦係数（1秒間に減速する度数）。大きいほど急ブレーキ。
 
 let isDragging = false;
 let startAngle = 0;   // ドラッグ開始時のマウス角度
@@ -19,6 +20,8 @@ let hasMoved = false; // ドラッグ中に動いたかどうかのフラグ
 let initialPlayerState = -1;
 let pressStartTime = 0;
 let visualPercentage = 0; // 進行度の視覚的な値
+let isStopping = false; // 「徐々に止まっている最中」フラグ
+let stopVelocity = 0;   // 慣性停止中の現在の速度
 
 // YouTube Iframe API関連のコード
 let player; // YouTubeプレーヤーのオブジェクトを入れる箱
@@ -89,7 +92,7 @@ function getAngle(x, y, center) {
 function handleStart(clientX, clientY) {
     isDragging = true;
 
-    pressStartTime = performance.now();
+    pressStartTime = performance.now();　// 押し始めた時間を記録
 
     // タップ判定用に開始座標を保存
     dragStartX = clientX;
@@ -106,7 +109,7 @@ function handleStart(clientX, clientY) {
 
     totalSeekDelta = 0; // 合計変化量をリセット
     seekDisplay.innerText = "0.0s"; // 表示をリセット
-    turntable.classList.add('dragging'); // CSSで表示させるクラスを付与
+
     turntable.style.cursor = 'grabbing';
 
     // ★重要！ドラッグ開始時点の動画時間を「基準」としてロックするでやんす
@@ -132,6 +135,7 @@ function handleMove(clientX, clientY) {
         if(moveX > 5 || moveY > 5) {
             hasMoved = true;
 
+            turntable.classList.add('dragging'); // CSSで表示させるクラスを付与
             if(isPlayerReady) {
                 player.pauseVideo();
             }
@@ -212,15 +216,21 @@ function handleEnd() {
     if (isPlayerReady) {
         if(hasMoved || isLongPress) {
             player.playVideo();
+            isStopping = false;
         } else {
+            // ■タップ（移動なし・短押し）の場合
             if(initialPlayerState === 1) {
+                // A: 元々再生中だった -> 停止処理！
 
-                turntable.style.transform = `rotate(${state.angle}deg)`;
-                setTimeout(() => {
-                    turntable.style.transform = `rotate(${state.angle}deg)`;
-                }, 100);
+                player.pauseVideo(); // 音は即止める（仕様の限界）
+
+                // ★ここを書き換え！慣性停止モードへ移行
+                isStopping = true;
+                stopVelocity = AUTO_ROTATE_SPEED_PPS; // 現在の回転速度を引き継ぐ
             } else {
+                // B: 元々停止中だった -> 再生
                 player.playVideo();
+                isStopping = false; // 停止モード解除
             }
         }
 
@@ -229,7 +239,7 @@ function handleEnd() {
 
 // 自動回転のアニメーションループ
 function animate(currentTime) {
-// 初回呼び出し時は currentTime が undefined の場合があるので補正
+    // 初回呼び出し時は currentTime が undefined の場合があるので補正
     if (!currentTime) currentTime = performance.now();
 
     // 前回のフレームからの経過時間（ミリ秒）を計算
@@ -240,7 +250,8 @@ function animate(currentTime) {
 
     // ドラッグしていない、かつ動画が再生中の時だけ自動回転
     if (!isDragging && isPlayerReady && player.getPlayerState() === 1) {
-
+        // 再生中は「停止モード」ではないのでフラグを折る
+        isStopping = false;
         // ★ここが修正のキモでやんす！★
         // (経過ミリ秒 / 1000) で「経過秒数」にし、それに「1秒あたりの速度」を掛ける
         // これでどんなHzのモニタでも同じ速度になるでやんす！
@@ -250,6 +261,25 @@ function animate(currentTime) {
         turntable.style.transform = `rotate(${currentRotation}deg)`;
 
         initialRotation = currentRotation;
+    }// ■パターン2: 慣性停止中（徐々に止まる）★ここを追加！
+    else if (isStopping && !isDragging) {
+
+        // 摩擦計算：速度から少し引く
+        // (摩擦係数 * 経過秒数) を引く
+        const decalAmount = STOP_FRICTION * (deltaTime / 1000);
+        stopVelocity -= decalAmount;
+
+        // まだ速度が残っているなら回す
+        if (stopVelocity > 0) {
+            // 残った速度分だけ回す
+            currentRotation += stopVelocity * (deltaTime / 1000);
+            turntable.style.transform = `rotate(${currentRotation}deg)`;
+            initialRotation = currentRotation; // 次のドラッグのために保存
+        } else {
+            // 完全に止まったら終了
+            stopVelocity = 0;
+            isStopping = false;
+        }
     }
 
     if (isPlayerReady) {
@@ -267,7 +297,9 @@ function animate(currentTime) {
             if (targetPercentage > 100) targetPercentage = 100;
         }
 
-        visualPercentage += (targetPercentage - visualPercentage) * 0.1;
+        // 2. 「見た目の値」を「目標値」に少しずつ近づける（イージング処理）
+        // (目標 - 現在) * 係数
+        visualPercentage += (targetPercentage - visualPercentage) * 0.05;
 
         if (Math.abs(targetPercentage - visualPercentage) < 0.01) {
             visualPercentage = targetPercentage;
