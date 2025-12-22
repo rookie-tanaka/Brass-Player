@@ -256,10 +256,15 @@ function animate(currentTime) {
         // 現在の進行度（%）を計算
         const duration = player.getDuration();
         const current = player.getCurrentTime();
+        const state = player.getPlayerState();
 
         let targetPercentage = 0;
-        if (duration > 0) {
+        if (state === 0) {
+            targetPercentage = 100;
+        } else if (duration > 0) {
             targetPercentage = (current / duration) * 100;
+
+            if (targetPercentage > 100) targetPercentage = 100;
         }
 
         visualPercentage += (targetPercentage - visualPercentage) * 0.1;
