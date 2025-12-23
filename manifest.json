@@ -1,6 +1,6 @@
 {
-  "name": "Brass-Player",
-  "short_name": "BP",
+  "name": "Brass Player",
+  "short_name": "Brass Player",
   "description": "譜読み支援ツール",
   "start_url": "index.html",
   "display": "standalone",
