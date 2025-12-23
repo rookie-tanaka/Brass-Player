@@ -4,7 +4,7 @@ const progressRing = document.getElementById('progressRing');
 
 const AUTO_ROTATE_SPEED_PPS = 60; // 1秒間に60度回転する
 const LONG_PRESS_MS = 500;
-const STOP_FRICTION = 70; // 摩擦係数（1秒間に減速する度数）。大きいほど急ブレーキ。
+const STOP_FRICTION = 140; // 摩擦係数（1秒間に減速する度数）。大きいほど急ブレーキ。
 
 let isDragging = false;
 let startAngle = 0;   // ドラッグ開始時のマウス角度
