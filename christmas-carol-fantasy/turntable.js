@@ -10,7 +10,6 @@ let isDragging = false;
 let startAngle = 0;   // ドラッグ開始時のマウス角度
 let currentRotation = 0; // 現在の円の回転角度
 let initialRotation = 0; // ドラッグ開始時の円の角度
-let autoRotateSpeed = 1; // 自動回転速度（度/フレーム）
 let lastTime = performance.now() // 前回の時間を記録
 let totalSeekDelta = 0; // ドラッグ中の合計秒数変化量
 let dragStartTime = 0; // ドラッグ開始時の動画の秒数

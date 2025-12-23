@@ -1,0 +1,19 @@
+{
+  "name": "Brass-Player",
+  "short_name": "BP",
+  "description": "譜読み支援ツール",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "640x640",
+      "src": "maskable_icon.png",
+      "type": "image/png"
+    }
+  ],
+  "lang": "ja",
+  "dir": "ltr"
+}
