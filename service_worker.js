@@ -1,5 +1,5 @@
 // キャッシュ名をバージョン管理する
-const CACHE_NAME = 'bp-caches-v1';
+const CACHE_NAME = 'bp-caches-v3';
 
 // キャッシュするファイルのリスト
 const urlsToCache = [
@@ -8,8 +8,8 @@ const urlsToCache = [
     './css/style.css',
     './js/index.js',
     './manifest.json',
+    './maskable_icon.png', // 新しいアイコンを追加
     './img/favicon.ico',
-    './img/logo-icon.webp',
     './img/logo-text-black.svg',
     './img/bg.png',
     // 他のページやアセットも必要に応じて追加
